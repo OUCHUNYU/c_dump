@@ -11,6 +11,7 @@
 #include "basic_exercises/exercise_6.h"
 #include "basic_exercises/exercise_7.h"
 #include "basic_exercises/exercise_8.h"
+#include "basic_exercises/exercise_aio.h"
 
 int main() {
 
@@ -22,6 +23,7 @@ int main() {
     run_exercise(6, &exercise_6);
     run_exercise(7, &exercise_7);
     run_exercise(8, &exercise_8);
+    run_exercise(9, &exercise_aio);
 
     return 0;
 }

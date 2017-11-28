@@ -49,14 +49,19 @@ void print_single_bank_note(int *total, const int *amount) {
     int times = 1;
     int amount_copy = *amount;
 
+    if (*total - amount_copy < 0) {
+        printf("%d Note(s) of %f \n", 0, *amount * 1.00);
+        return;
+    }
+
     while (!stop) {
-        if ((*total % times * amount_copy) < amount_copy) {
+        if (*total - amount_copy < *amount) {
             stop = true;
             continue;
         }
 
         times ++;
-        amount_copy = amount_copy * times;
+        amount_copy = *amount * times;
     }
 
     *total = *total - amount_copy;
@@ -70,4 +75,10 @@ void print_bank_note(const int *total) {
     for (int i = 0; i < sizeof(amount_type) / sizeof(int); i++) {
         print_single_bank_note(&total_copy, &amount_type[i]);
     }
+}
+
+// aio runner function
+void exercise_aio() {
+    int exercise_16_input_data = 375;
+    print_bank_note(&exercise_16_input_data);
 }
