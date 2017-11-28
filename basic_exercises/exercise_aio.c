@@ -115,6 +115,28 @@ void print_days_in_y_m_d(const int *days) {
     printf("%d Day(s)\n\n", total_days_copy);
 }
 
+void print_range(const int *input) {
+    if (*input > 80 || *input < 0) {
+        printf("ERROR: input is less than 0 or out of range");
+        return;
+    }
+
+    int left_bound = 0;
+    int right_bound = 20;
+    bool found = false;
+
+    while (!found) {
+        if (*input >= left_bound && *input <= right_bound) {
+            found = true;
+        } else {
+            left_bound += 20;
+            right_bound += 20;
+        }
+    }
+
+    printf("\nRange [%d, %d]\n\n", left_bound, right_bound);
+}
+
 // aio runner function
 void exercise_aio() {
     int exercise_16_input_data = 375;
@@ -125,4 +147,7 @@ void exercise_aio() {
 
     int exercise_18_input_data = 2535;
     print_days_in_y_m_d(&exercise_18_input_data);
+
+    int exercise_21_input_data = 15;
+    print_range(&exercise_21_input_data);
 }
