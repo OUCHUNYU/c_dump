@@ -95,6 +95,26 @@ void print_seconds_in_h_m_s(const int *total_sec) {
     printf("\nH:M:S - %d:%d:%d\n", hour, minute, total_sec_copy);
 }
 
+void print_days_in_y_m_d(const int *days) {
+    int total_days_copy = *days;
+    int year = 0;
+    int month = 0;
+
+    while (total_days_copy >= 365) {
+        year ++;
+        total_days_copy -= 365;
+    }
+
+    while (total_days_copy >= 30) {
+        month ++;
+        total_days_copy -= 30;
+    }
+
+    printf("\n%d Year(s)\n", year);
+    printf("%d Month(s)\n", month);
+    printf("%d Day(s)\n\n", total_days_copy);
+}
+
 // aio runner function
 void exercise_aio() {
     int exercise_16_input_data = 375;
@@ -102,4 +122,7 @@ void exercise_aio() {
 
     int exercise_17_input_data = 25300;
     print_seconds_in_h_m_s(&exercise_17_input_data);
+
+    int exercise_18_input_data = 2535;
+    print_days_in_y_m_d(&exercise_18_input_data);
 }
