@@ -77,8 +77,29 @@ void print_bank_note(const int *total) {
     }
 }
 
+void print_seconds_in_h_m_s(const int *total_sec) {
+    int total_sec_copy = *total_sec;
+    int hour = 0;
+    int minute = 0;
+
+    while (total_sec_copy >= 3600) {
+        hour += 1;
+        total_sec_copy -= 3600;
+    }
+
+    while (total_sec_copy >= 60) {
+        minute += 1;
+        total_sec_copy -= 60;
+    }
+
+    printf("\nH:M:S - %d:%d:%d\n", hour, minute, total_sec_copy);
+}
+
 // aio runner function
 void exercise_aio() {
     int exercise_16_input_data = 375;
     print_bank_note(&exercise_16_input_data);
+
+    int exercise_17_input_data = 25300;
+    print_seconds_in_h_m_s(&exercise_17_input_data);
 }
