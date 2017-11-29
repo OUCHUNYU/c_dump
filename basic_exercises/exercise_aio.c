@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "exercise_aio.h"
 
 
@@ -137,6 +138,87 @@ void print_range(const int *input) {
     printf("\nRange [%d, %d]\n\n", left_bound, right_bound);
 }
 
+int add_odd_bin(int x, int y) {
+    int start = x > y ? y : x;
+    int end = x > y ? x : y;
+
+    int total = 0;
+    while (start < end) {
+        if (start % 2 == 0) {
+            total += start;
+        }
+        start ++;
+    }
+    return total;
+}
+
+int add_odd(int a, int b, int c, int d, int e) {
+    return add_odd_bin(a, b) + add_odd_bin(b, c) + add_odd_bin(c, d) + add_odd_bin(d, e);
+}
+
+bool is_valid_triangle(float x, float y, float z) {
+    return (x + y > z) && (x + z > y) && (z + y > x);
+}
+
+void is_multiplied(int x, int y) {
+    int left_o = x > y ? x : y;
+    int right_o = x > y ? y : x;
+    if (left_o % right_o == 0) {
+        printf("\n\nMultiplied!\n");
+    }
+}
+
+long int rand_in_range(long min, long max) {
+    long r;
+    long range = max - min + 1;
+    long bins = RAND_MAX / range;
+    long limit = bins * range;
+
+    do {
+        r = random();
+    } while (r >= limit);
+
+    return min + (r / bins);
+}
+
+void print_even_in_range(int min, int max) {
+    while (min <= max) {
+        if (min % 2 == 0) {
+            printf("%d ", min);
+        }
+        min ++;
+    }
+}
+
+void print_p_and_n(int a, int b, int c, int d, int e) {
+    int p = 0;
+    int n = 0;
+    int param_arr[5] = {a, b, c, d, e};
+    for (int i = 0; i < 5; i++) {
+        if (param_arr[i] > 0) {
+            p ++;
+        } else if (param_arr[i] < 0) {
+            n ++;
+        }
+    }
+
+    printf("\n\nNumber of positive numbers: %d\n", p);
+    printf("Number of negative numbers: %d\n", n);
+}
+
+// Common way, double the size of the buffer every time when the buffer is about to grow out of bound
+//void exercise_43(int line, int item) {
+//    char output[(line * item) + line + 1] = {""};
+//    int count = 0;
+//    int outer = 0;
+//    for (int i = 0; i < line; i++) {
+//        for (int j = 0; j < item; j++) {
+//            char
+//            output[count] = scanf("%d", outer + j + 1);
+//        }
+//    }
+//}
+
 // aio runner function
 void exercise_aio() {
     int exercise_16_input_data = 375;
@@ -150,4 +232,21 @@ void exercise_aio() {
 
     int exercise_21_input_data = 15;
     print_range(&exercise_21_input_data);
+
+    printf("\n\nSum of all odd values: %d\n", add_odd(11, 17, 13, 12, 5));
+
+    if (!is_valid_triangle(5, 7, 9)) {
+        printf("\n\n\n\nFAILED VERY VERY HARD!\n\n\n\n");
+        exit(EXIT_FAILURE);
+    }
+
+    is_multiplied(5, 15);
+    is_multiplied(15, 5);
+
+    printf("\n\nRandom month number %ld", rand_in_range(1, 12));
+
+    printf("\n\n");
+    print_even_in_range(1, 50);
+    printf("\n\n");
+    print_p_and_n(5, -4, 10, 15, -1);
 }
