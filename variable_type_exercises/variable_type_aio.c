@@ -30,10 +30,24 @@ static void exercise_2() {
     printf("The reset of the string is \"%s\"", sentence);
 }
 
+static void exercise3() {
+    char *data = "20093 2b4a2d 1001001001101001";
+    char *next;
+    long l_1, l_2, l_3;
+    l_1 = strtol(data, &next, 10);
+    l_2 = strtol(next, &next, 16);
+    l_3 = strtol(next, &next, 2);
+
+    printf("\n");
+    printf("First parse base 10 long: %ld\n", l_1);
+    printf("Second parse base 16(hex) long: %ld\n", l_2);
+    printf("Third parse base 2(bin) long: %ld\n", l_3);
+    printf("\n");
+}
+
 void variable_type_aio() {
     printf("<<<<<<<<<<<< Variable Types <<<<<<<<<<<<\n\n");
-
     exercise_2();
-
+    exercise3();
     printf("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 }
