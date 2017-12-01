@@ -9,20 +9,20 @@
 #include "exercise_aio.h"
 
 
-int sum_two_int(const int *f, const int *s) {
+static int sum_two_int(const int *f, const int *s) {
     return *f + *s;
 }
 
-int product_two_int(const int *f, const int *s) {
+static int product_two_int(const int *f, const int *s) {
     return *f * *s;
 }
 
-int calculate_salary(const int *employee_id, const float *hours, const double *per_din) {
+static int calculate_salary(const int *employee_id, const float *hours, const double *per_din) {
     printf("Employees ID = %d\n", *employee_id);
     printf("Salary = U$ %lf\n", (*hours) * (*per_din));
 }
 
-int find_max_in_three_int(const int *a, const int *b, const int *c) {
+static int find_max_in_three_int(const int *a, const int *b, const int *c) {
     int max = 0;
     if (*a > max) {
         max = *a;
@@ -39,13 +39,13 @@ int find_max_in_three_int(const int *a, const int *b, const int *c) {
     return max;
 }
 
-double length_between_two_point(const int *x1, const int *y1, const int *x2, const int *y2) {
+static double length_between_two_point(const int *x1, const int *y1, const int *x2, const int *y2) {
     int y = *y2 - *y1;
     int x = *x2 - *x1;
     return sqrt((y * y) + (x * x));
 }
 
-void print_single_bank_note(int *total, const int *amount) {
+static void print_single_bank_note(int *total, const int *amount) {
     bool stop = false;
     int times = 1;
     int amount_copy = *amount;
@@ -69,7 +69,7 @@ void print_single_bank_note(int *total, const int *amount) {
     printf("%d Note(s) of %f \n", times, *amount * 1.00);
 }
 
-void print_bank_note(const int *total) {
+static void print_bank_note(const int *total) {
     int total_copy = *total;
     int amount_type[7] = {100, 50, 20, 10, 5, 2, 1};
 
@@ -78,7 +78,7 @@ void print_bank_note(const int *total) {
     }
 }
 
-void print_seconds_in_h_m_s(const int *total_sec) {
+static void print_seconds_in_h_m_s(const int *total_sec) {
     int total_sec_copy = *total_sec;
     int hour = 0;
     int minute = 0;
@@ -96,7 +96,7 @@ void print_seconds_in_h_m_s(const int *total_sec) {
     printf("\nH:M:S - %d:%d:%d\n", hour, minute, total_sec_copy);
 }
 
-void print_days_in_y_m_d(const int *days) {
+static void print_days_in_y_m_d(const int *days) {
     int total_days_copy = *days;
     int year = 0;
     int month = 0;
@@ -116,7 +116,7 @@ void print_days_in_y_m_d(const int *days) {
     printf("%d Day(s)\n\n", total_days_copy);
 }
 
-void print_range(const int *input) {
+static void print_range(const int *input) {
     if (*input > 80 || *input < 0) {
         printf("ERROR: input is less than 0 or out of range");
         return;
@@ -138,7 +138,7 @@ void print_range(const int *input) {
     printf("\nRange [%d, %d]\n\n", left_bound, right_bound);
 }
 
-int add_odd_bin(int x, int y) {
+static int add_odd_bin(int x, int y) {
     int start = x > y ? y : x;
     int end = x > y ? x : y;
 
@@ -152,15 +152,15 @@ int add_odd_bin(int x, int y) {
     return total;
 }
 
-int add_odd(int a, int b, int c, int d, int e) {
+static int add_odd(int a, int b, int c, int d, int e) {
     return add_odd_bin(a, b) + add_odd_bin(b, c) + add_odd_bin(c, d) + add_odd_bin(d, e);
 }
 
-bool is_valid_triangle(float x, float y, float z) {
+static bool is_valid_triangle(float x, float y, float z) {
     return (x + y > z) && (x + z > y) && (z + y > x);
 }
 
-void is_multiplied(int x, int y) {
+static void is_multiplied(int x, int y) {
     int left_o = x > y ? x : y;
     int right_o = x > y ? y : x;
     if (left_o % right_o == 0) {
@@ -168,7 +168,7 @@ void is_multiplied(int x, int y) {
     }
 }
 
-long int rand_in_range(long min, long max) {
+static long int rand_in_range(long min, long max) {
     long r;
     long range = max - min + 1;
     long bins = RAND_MAX / range;
@@ -181,7 +181,7 @@ long int rand_in_range(long min, long max) {
     return min + (r / bins);
 }
 
-void print_even_in_range(int min, int max) {
+static void print_even_in_range(int min, int max) {
     while (min <= max) {
         if (min % 2 == 0) {
             printf("%d ", min);
@@ -190,7 +190,7 @@ void print_even_in_range(int min, int max) {
     }
 }
 
-void print_p_and_n(int a, int b, int c, int d, int e) {
+static void print_p_and_n(int a, int b, int c, int d, int e) {
     int p = 0;
     int n = 0;
     int param_arr[5] = {a, b, c, d, e};
@@ -205,19 +205,6 @@ void print_p_and_n(int a, int b, int c, int d, int e) {
     printf("\n\nNumber of positive numbers: %d\n", p);
     printf("Number of negative numbers: %d\n", n);
 }
-
-// Common way, double the size of the buffer every time when the buffer is about to grow out of bound
-//void exercise_43(int line, int item) {
-//    char output[(line * item) + line + 1] = {""};
-//    int count = 0;
-//    int outer = 0;
-//    for (int i = 0; i < line; i++) {
-//        for (int j = 0; j < item; j++) {
-//            char
-//            output[count] = scanf("%d", outer + j + 1);
-//        }
-//    }
-//}
 
 // aio runner function
 void exercise_aio() {

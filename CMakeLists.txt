@@ -16,6 +16,7 @@ set(
         basic_exercises/exercise_7.c basic_exercises/exercise_7.h
         basic_exercises/exercise_8.c basic_exercises/exercise_8.h
         basic_exercises/exercise_aio.c basic_exercises/exercise_aio.h
+        variable_type_exercises/variable_type_aio.c variable_type_exercises/variable_type_aio.h
 )
 
 add_executable(c_dump ${SOURCE_FILES})
