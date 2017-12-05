@@ -85,6 +85,15 @@ static void exercise_6() {
     }
     printf("\n");
 }
+/**
+ * Write a C program to return the absolute value of a long integer.
+ */
+static void exercise_8() {
+    int data_1 = -13123;
+    double data_2 = -12.231;
+    printf("\n absolute value of %d is %d\n", data_1, abs(data_1));
+    printf("\n absolute value of %lf is %d\n", data_2, abs(data_2));
+}
 
 void variable_type_aio() {
     printf("<<<<<<<<<<<< Variable Types <<<<<<<<<<<<\n\n");
@@ -93,5 +102,6 @@ void variable_type_aio() {
     exercise_4();
     exercise_5();
     exercise_6();
+    exercise_8();
     printf("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 }
