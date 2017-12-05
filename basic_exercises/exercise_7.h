@@ -5,7 +5,6 @@
 #ifndef C_EXERCISES_EXERCISE_7_H
 #define C_EXERCISES_EXERCISE_7_H
 
-#endif //C_EXERCISES_EXERCISE_7_H
-
-
 void exercise_7();
+
+#endif //C_EXERCISES_EXERCISE_7_H

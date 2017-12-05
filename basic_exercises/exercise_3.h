@@ -5,7 +5,6 @@
 #ifndef PROJECT_1_EXERCISE_3_H
 #define PROJECT_1_EXERCISE_3_H
 
-#endif //PROJECT_1_EXERCISE_3_H
-
-
 void exercise_3();
+
+#endif //PROJECT_1_EXERCISE_3_H
