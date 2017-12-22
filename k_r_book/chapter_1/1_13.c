@@ -11,7 +11,7 @@ int main() {
         current = out;
     int length = 0;
 
-    while ((c = getchar()) != EOF) {
+    while ((c = getchar()) != '\n') {
         if (c == ' ' || c == '\n' || c == '\t') {
             current = out;
         } else {
