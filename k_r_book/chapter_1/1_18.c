@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #define MAXLINE 1000
 
 int fetch_line(char line[], int max_char_count);
@@ -22,6 +23,7 @@ int main() {
         if (is_blank(current_line)) {
             continue;
         }
+        
         printf("%s", current_line);
 
         empty_line(current_line);
@@ -46,7 +48,7 @@ int fetch_line(char line[], int max_char_count) {
 }
 
 void remove_trailing_blanks(char *line) {
-    int line_size = sizeof(line) / sizeof(char);
+    int line_size = strlen(line); 
     int i; // array current index
     int item; // array current item at index i
     
@@ -74,7 +76,7 @@ void remove_trailing_blanks(char *line) {
 
 int is_blank(char *line) { 
     int result = 1;
-    int size = sizeof(line) / sizeof(char);
+    int size = strlen(line);
     
     for (int i = 0; i < size; i ++) {
         int c = line[i];
@@ -88,7 +90,7 @@ int is_blank(char *line) {
 }
 
 void empty_line(char *line) {
-    int size = sizeof(line) / sizeof(char);
+    int size = strlen(line);
     for (int i = 0; i < size; i ++) {
         line[i] = '\0';
     }
