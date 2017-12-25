@@ -2,8 +2,9 @@
 #define MAXLINE 1000
 
 int fetch_line(char line[], int max_char_count);
-void remove_trailing_blanks(char line[]);
-int is_blank(char line[]);
+void remove_trailing_blanks(char *line);
+int is_blank(char *line);
+void empty_line(char *line);
 
 int main() {
     
@@ -22,6 +23,8 @@ int main() {
             continue;
         }
         printf("%s", current_line);
+
+        empty_line(current_line);
     }
 
     return 0;
@@ -41,4 +44,56 @@ int fetch_line(char line[], int max_char_count) {
     line[size] = '\0';
     return size;
 }
+
+void remove_trailing_blanks(char *line) {
+    int line_size = sizeof(line) / sizeof(char);
+    int i; // array current index
+    int item; // array current item at index i
+    
+    if (*line == '\0') {
+        return;
+    }
+
+    if (*line == '\n') {
+        *line = '\0';
+        return;
+    }
+
+    for (i = line_size - 1; i >= 0; i --) {
+        item = line[i];
+
+        if (item != ' ' && item != '\n' && item != '\t')  {
+            break;
+        }
+
+        line[i] = '\0';
+    }
+
+    line[i + 1] = '\n';
+}
+
+int is_blank(char *line) { 
+    int result = 1;
+    int size = sizeof(line) / sizeof(char);
+    
+    for (int i = 0; i < size; i ++) {
+        int c = line[i];
+        if (c == ' ' || c == '\n' || c == '\t' || c == '\0') {
+            continue;
+        }
+        result = 0;
+    }
+
+    return result;
+}
+
+void empty_line(char *line) {
+    int size = sizeof(line) / sizeof(char);
+    for (int i = 0; i < size; i ++) {
+        line[i] = '\0';
+    }
+}
+
+
+
 
