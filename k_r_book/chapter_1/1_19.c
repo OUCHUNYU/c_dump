@@ -27,8 +27,8 @@ int main() {
         empty_line(reversed_str);
         string_size = 0;
     }
-    return 0;
 
+    return 0;
 }
 
 int fetch_line(char line[], int max_char_count) {
