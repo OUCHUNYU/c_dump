@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#define MAXLINE 1000
+#define MAXLINE 10000
 
 int fetch_line(char line[], int max_char_count);
 void empty_line(char *line);
@@ -112,11 +112,4 @@ void fold(char *input_line, char *result_line, int width) {
         s_index ++;
     }
 }
-
-
-
-
-
-
-
 
