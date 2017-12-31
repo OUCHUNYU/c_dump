@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define MAXCHAR 100000
 
 int fetch_file(char content[], int max_char_count);
@@ -17,6 +18,10 @@ int main() {
     remove_multi_line_comment(inter_content, final_content);
     
     printf("%s", final_content);
+
+    free(input_content);
+    free(inter_content);
+    free(final_content);
 
     return 0;
 }
