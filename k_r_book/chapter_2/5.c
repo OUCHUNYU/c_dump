@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 int any(char *s1, char *s2);
 
 int main() {
 
     char s1[] = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
-    char s2[] = "z a b";
+    char s2[] = "z  h";
 
     printf("found at location %d\n", any(s1, s2));
 
@@ -21,6 +22,9 @@ int any(char *s1, char *s2) {
     int i, j;
 
     for (i = 0; s1[i] != '\0'; i ++) {
+        if (!islower(s1[i]) && !isupper(s1[i])) {
+            continue;
+        }
 
         for (j = 0; s2[j] != '\0'; j ++) {
             if (s1[i] != s2[j]) {
