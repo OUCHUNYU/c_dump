@@ -16,32 +16,27 @@ int main() {
 }
 
 void itoa(int n, char s[]) {
-    int i = 0;
-    int sign;
+    int i, sign;
+    unsigned int n2;
+    i = 0;
 
-    if (n < -INT_MAX) {
-        int offset = n + INT_MAX;
 
-        do {
-            s[i ++] = offset % 10 + '0';
-        } while ((offset /= 10) > 0);
-
-        n = -INT_MAX;
-    }
-    
     if ((sign = n) < 0) {
-        n = -n;
+        n2 = -n;
+    }
+    else {
+        n2 = n;
     }
 
     do {
-        s[i ++] = n % 10 + '0';
-    } while ((n /= 10) > 0);
-    
-    if (sign < 0) {
-        s[i ++] = '-';
+        s[i++] = (n2 % 10) + '0';
     }
-
+    while ((n2 /= 10) > 0);
+    if (sign < 0) {
+        s[i++] = '-';
+    }
     s[i] = '\0';
+
     reverse(s);
 }
 
