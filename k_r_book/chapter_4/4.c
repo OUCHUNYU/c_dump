@@ -18,6 +18,8 @@ void ungetch(int c);
 void push(double d);
 double pop();
 void print_top();
+void swap_top_two();
+void stack_clear();
 
 /*
  * states
@@ -68,6 +70,12 @@ int main() {
             case '?':
                 print_top();
                 break;
+            case '@':
+                swap_top_two();
+                break;
+            case '!':
+                stack_clear();
+                break;
             default:
                 printf("error: unknown command %s\n", s);
                 break;
@@ -100,6 +108,19 @@ void print_top() {
     } else {
         printf("error: stack empty\n");
     }
+}
+
+void swap_top_two() {
+    double item1 = pop();
+    double item2 = pop();
+
+    push(item1);
+    push(item2);
+}
+
+void stack_clear() {
+    sp = 0;
+    printf("Stack is cleared.\n");
 }
 
 int getop(char s[]) {
