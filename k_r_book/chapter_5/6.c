@@ -13,7 +13,12 @@ int main() {
     printf("test _getline()\n%s", test_getline);
     
     _reverse(test_getline);
-    printf("test _reverse()\n%s", test_getline);
+    printf("test _reverse()\n%s\n", test_getline);
+
+    char test_itoa[100];
+    int itoa_i = 1237409;
+    _itoa(test_itoa, itoa_i);
+    printf("test itoa()\ntest data: %i\nresult: %s\n", itoa_i, test_itoa);
 
     return 0;
 }
@@ -56,5 +61,17 @@ void _reverse(char *s) {
     }
 }
 
+void _itoa(char *a, int i) {
+    int counter = 0;
+    while (i > 0) {
+        *a = (i % 10) + '0';
+        a++;
+        i /= 10;
+        counter++;
+    }
+    *a = '\0';
+    a -= counter;
+    _reverse(a);
+}
 
 
