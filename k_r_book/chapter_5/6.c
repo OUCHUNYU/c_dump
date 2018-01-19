@@ -5,6 +5,7 @@ int _getline(char *line, int max);
 void _reverse(char *s);
 int _atoi(char *a);
 void _itoa(char *a, int i);
+int _strindex(char *s, char *t);
 
 int main() {
     
@@ -19,6 +20,15 @@ int main() {
     int itoa_i = 1237409;
     _itoa(test_itoa, itoa_i);
     printf("test itoa()\ntest data: %i\nresult: %s\n", itoa_i, test_itoa);
+
+    printf("test atoi()\nresult: %i\n", _atoi(test_itoa));
+
+    char *test_strindex = "This is test for _strindex";
+    char *target_strindex = "_strindex";
+    int found_index = _strindex(test_strindex, target_strindex);
+    if (found_index >= 0) {
+        printf("_strindex found the index: %i\n", found_index);
+    }
 
     return 0;
 }
@@ -74,4 +84,27 @@ void _itoa(char *a, int i) {
     _reverse(a);
 }
 
+int _atoi(char *a) {
+    int result = 0;
+    while (*a != '\0') {
+        result = result * 10 + (*a - '0');
+        a++;
+    }
+    return result;
+}
+
+int _strindex(char *s, char *t) {
+    int result = -1;
+
+    int i, j, k;
+    for (i = 0; *(s + i) != '\0'; i++) {
+        for (j = i, k = 0; *(t + k) != '\0' && *(s + j) == *(t + k); j++, k++) {
+        }
+        if (k > 0 && *(t + k) == '\0') {
+            result = i;
+        }
+    }
+
+    return result;
+}
 
