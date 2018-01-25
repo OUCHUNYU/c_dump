@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         printf("original: %s\n", current_line);
         entab(current_line, output_line, tabstops, argument_count);
         printf("entabed: %s\n", output_line);
-        entab(current_line, output_line, tabstops, argument_count);
+        detab(current_line, output_line, tabstops, argument_count);
         printf("detabed: %s\n", output_line);
         puts("--------------- end ------------------\n");
     }
@@ -118,7 +118,6 @@ void entab(char *in, char *out, int *tabstops, int ts_count) {
             }
 
             space_fill = current_tabstop - space_count % current_tabstop;
-            printf("space count: %i, Space to fill: %i\n", space_count, space_fill);
 
             while (space_fill > 0) {
                 *out = ' ';
@@ -133,9 +132,55 @@ void entab(char *in, char *out, int *tabstops, int ts_count) {
             out++;
         }
     }
+
+    *out = '\0';
 }
 
 void detab(char *in, char *out, int *tabstops, int ts_count) {
+    int current_tabstop;
+    int current_char;
+    int space_count = 0;
+    int space_fill = 0;
+    int tabchar_fill = 0;
+
+    while ((current_char = *in++) && current_char != '\0') {
+        if (current_char == ' ') {
+            space_count++;
+        } else {
+            if (ts_count > 0) {
+                current_tabstop = *tabstops;
+            } else {
+                current_tabstop = DEFAULT_TABSTOP;
+            }
+            
+            space_fill = space_count % current_tabstop;
+            tabchar_fill = space_count / current_tabstop;
+
+            if (tabchar_fill > 0) {
+                ts_count--;
+                tabstops++;
+            }
+
+            while (tabchar_fill > 0) {
+                *out = '\t';
+                out++;
+                tabchar_fill--;
+            }
+
+            while (space_fill > 0) {
+                *out = ' ';
+                out++;
+                space_fill--;
+            }
+
+            space_count = 0;
+
+            *out = current_char;
+            out++;
+        }
+    }
+
+    *out = '\0';
 }
 
 
