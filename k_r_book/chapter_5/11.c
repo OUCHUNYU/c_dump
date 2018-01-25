@@ -18,10 +18,6 @@ int main(int argc, char *argv[]) {
     int *tabstops = malloc(argument_count * sizeof(int));
     memcpy(tabstops, user_provided_tabstops, argument_count * sizeof(int));
 
-    // for (int i = 0; i < argument_count; i++) {
-    //     printf("argument %i: %i\n", i, tabstops[i]);
-    // }
-
     char current_line[10000];
     char output_line[10000];
     
@@ -102,6 +98,41 @@ int fetch_line(char *line, int max_char_count) {
 }
 
 void entab(char *in, char *out, int *tabstops, int ts_count) {
+    int current_tabstop;
+    int current_char;
+    int space_fill = 0;
+    int space_count = 0;
+
+    while ((current_char = *in++) && current_char != '\0') {
+        if (current_char == ' ') {
+            space_count++;
+            *out = current_char;
+            out++;
+        } else if (current_char == '\t') {
+            if (ts_count > 0) {
+                current_tabstop = *tabstops;
+                tabstops++;
+                ts_count--;
+            } else {
+                current_tabstop = DEFAULT_TABSTOP;
+            }
+
+            space_fill = current_tabstop - space_count % current_tabstop;
+            printf("space count: %i, Space to fill: %i\n", space_count, space_fill);
+
+            while (space_fill > 0) {
+                *out = ' ';
+                out++;
+                space_fill--;
+            }
+
+            space_count = 0;
+        } else {
+            space_count = 0;
+            *out = current_char;
+            out++;
+        }
+    }
 }
 
 void detab(char *in, char *out, int *tabstops, int ts_count) {
