@@ -4,29 +4,29 @@
 
 #define MAXLINE 5000
 
-char *lineptr[MAXLINE];
+static int numeric = 0;
+static int reverse = 0;
 
+void parse_flags(int argc, char *argv[]);
 int _getline(char *s, int lim);
 int _readlines(char *lineptr[], int nline);
 void _writelines(char *lineptr[], int nline);
-void _qsort(void *lineptr[], int left, int right,
-        int (*comp)(const void *, const void *));
-int _numcmp(const char *, const char *);
 void _swap(void *v[], int i, int j);
+int _numcmp(const char *, const char *);
+void _qsort(void *lineptr[], int left, int right,
+        int (*comp)(const void *, const void *), int reverse);
 
 int main(int argc, char *argv[]) {
     
     int nlines;
-    int numeric = 0;
+    char *lineptrs[MAXLINE];
 
-    if (argc > 1 && strcmp(argv[1], "-n") == 0) {
-        numeric = 1;
-    }
+    parse_flags(argc, argv);
 
-    if ((nlines = _readlines(lineptr, MAXLINE)) >= 0) {
-        _qsort((void **) lineptr, 0, nlines - 1,
-                (int (*)(const void *, const void *))(numeric ? _numcmp : strcmp));
-        _writelines(lineptr, nlines);
+    if ((nlines = _readlines(lineptrs, MAXLINE)) >= 0) {
+        _qsort((void **) lineptrs, 0, nlines - 1,
+                (int (*)(const void *, const void *))(numeric ? _numcmp : strcmp), reverse);
+        _writelines(lineptrs, nlines);
     } else {
         printf("error!\n");
         return 1;
@@ -35,38 +35,65 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-int _getline(char *s, int lim) {
-  int c, i;
+void parse_flags(int argc, char *argv[]) {
+    if (argc <= 1) {
+        return;
+    }
 
-  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; i++)
-    s[i] = c;
-  if (c == '\n') {
-    s[i++] = c;
-  }
-  s[i] = '\0';
-  return i;
+    if (strcmp(argv[1], "-n") == 0) {
+        numeric = 1;
+    } else if (strcmp(argv[1], "-r") == 0) {
+        reverse = 1;
+    } else if (strcmp(argv[1], "-rn") == 0 || strcmp(argv[1], "-nr") == 0) {
+        reverse = 1;
+        numeric = 1;
+    }
+
+    if (argc <= 2) {
+        return;
+    }
+
+    if (strcmp(argv[2], "-n") == 0) {
+        numeric = 1;
+    } else if (strcmp(argv[2], "-r") == 0) {
+        reverse = 1;
+    }
 }
 
-int _readlines(char *lineptr[], int nline) {
-    int i;
-    int len = 0;
-    char *p;
-    char line_buf[10000];
+int _getline(char *s, int lim) {
+    int c, i;
 
-    for (i = 0; i < nline && (len = _getline(line_buf, 10000)) > 0; i++) {
-        line_buf[len - 1] = '\0';
-        strcpy(p, line_buf);
-        lineptr[i] = p;
+    for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; i++) {
+        s[i] = c;
     }
-    
+
+    if (c == '\n') {
+        s[i++] = c;
+    }
+
+    s[i] = '\0';
     return i;
 }
 
-void _writelines(char *lineptr[], int nline) {
-    while (nline-- > 0)
-        printf("%s\n", *lineptr++);
+int _readlines(char *lineptr[], int nline) {
+    int len, nlines = 0;
+    char *p;
+    char line_buf[10000];
+    while ((len = _getline(line_buf, 10000)) > 0) {
+        line_buf[len - 1] = '\0';
+        p = malloc(len);
+        strcpy(p, line_buf);
+        lineptr[nlines++] = p;
+    }
+     
+    return nlines;
 }
 
+void _writelines(char *lineptr[], int nline) {
+    for (int i = 0; i < nline; i++) {
+        printf("%s\n", lineptr[i]);
+    }
+}
 
 int _numcmp(const char *s1, const char *s2) {
     double v1, v2;
@@ -82,8 +109,28 @@ int _numcmp(const char *s1, const char *s2) {
 }
 
 void _qsort(void *lineptr[], int left, int right,
-        int (*comp)(const void *, const void *)) {
-
+        int (*comp)(const void *, const void *), int reverse) {
+    int i, last;
+    
+    if (left >= right) {
+        return;
+    }
+    _swap(lineptr, left, (left + right) / 2);
+    last = left;
+    for (i = left + 1; i <= right; i++) {
+        if (reverse) {
+            if ((*comp)(lineptr[i], lineptr[left]) > 0) {
+                _swap(lineptr, ++last, i);
+            }
+        } else {
+            if ((*comp)(lineptr[i], lineptr[left]) < 0) {
+                _swap(lineptr, ++last, i);
+            }
+        }
+    }
+    _swap(lineptr, left, last);
+    _qsort(lineptr, left, last - 1, comp, reverse);
+    _qsort(lineptr, last + 1, right, comp, reverse);
 }
 
 void _swap(void *v[], int i, int j) {
