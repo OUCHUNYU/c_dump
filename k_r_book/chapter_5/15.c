@@ -14,6 +14,7 @@ int _readlines(char *lineptr[], int nline);
 void _writelines(char *lineptr[], int nline);
 void _swap(void *v[], int i, int j);
 int _numcmp(const char *, const char *);
+int _strcmp_case_insensitive(const char *, const char *);
 void _qsort(void *lineptr[], int left, int right,
         int (*comp)(const void *, const void *), int reverse);
 
@@ -36,14 +37,21 @@ int main(int argc, char *argv[]) {
 
     printf("numeric: %i, reverse: %i, case: %i\n", numeric, reverse, case_insensitive);
 
-    // if ((nlines = _readlines(lineptrs, MAXLINE)) >= 0) {
-    //     _qsort((void **) lineptrs, 0, nlines - 1,
-    //             (int (*)(const void *, const void *))(numeric ? _numcmp : strcmp), reverse);
-    //     _writelines(lineptrs, nlines);
-    // } else {
-    //     printf("error!\n");
-    //     return 1;
-    // }
+    if ((nlines = _readlines(lineptrs, MAXLINE)) >= 0) {
+        int (*function_p)(const char *, const char *) = strcmp;
+
+        if (numeric) {
+            function_p = _numcmp;
+        } else if (case_insensitive) {
+            function_p = _strcmp_case_insensitive;
+        }
+
+        _qsort((void **) lineptrs, 0, nlines - 1, (int (*)(const void *, const void *))function_p, reverse);
+        _writelines(lineptrs, nlines);
+    } else {
+        printf("error!\n");
+        return 1;
+    }
 
     return 0;
 }
@@ -121,6 +129,20 @@ int _numcmp(const char *s1, const char *s2) {
     } else {
         return 0;
     }
+}
+
+int _strcmp_case_insensitive(const char *str1, const char *str2) {
+    int c1, c2, result;
+
+    while ((c1 = *(str1++)) != '\0') {
+        c2 = *(str1++);
+        result = c1 - c2;
+        if (result != 0) {
+            return result;
+        }
+    }
+
+    return result;
 }
 
 void _qsort(void *lineptr[], int left, int right,
