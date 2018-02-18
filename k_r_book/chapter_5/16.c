@@ -16,6 +16,7 @@ void _writelines(char *lineptr[], int nline);
 void _swap(void *v[], int i, int j);
 int _numcmp(const char *, const char *);
 int _strcmp_case_insensitive(const char *, const char *);
+int _has_special_char(char *s);
 void _qsort(void *lineptr[], int left, int right,
         int (*comp)(const void *, const void *), int reverse);
 
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
         parse_flags(argc, argv, 3);
     }
 
-    printf("numeric: %i, reverse: %i, case: %i\n", numeric, reverse, case_insensitive);
+    printf("numeric: %i, reverse: %i, case: %i, dir order: %i\n", numeric, reverse, case_insensitive, dir_order);
 
     if ((nlines = _readlines(lineptrs, MAXLINE)) >= 0) {
         int (*function_p)(const char *, const char *) = strcmp;
@@ -125,6 +126,19 @@ void parse_flags(int argc, char *argv[], int index) {
     }
 }
 
+int _has_special_char(char *s) {
+    char c;
+    int result = 0;
+    while ((c = *(s++)) != '\0') {
+        if ((c >= 97 && c <= 122) || (c >= 65 && c <= 90) || (c >= 48 && c <= 57) || c == '\n') {
+            continue;
+        }
+
+        result = 1;
+    }
+    return result;
+}
+
 int _getline(char *s, int lim) {
     int c, i;
 
@@ -145,6 +159,11 @@ int _readlines(char *lineptr[], int nline) {
     char *p;
     char line_buf[10000];
     while ((len = _getline(line_buf, 10000)) > 0) {
+        if (dir_order && _has_special_char(line_buf)) {
+            printf("Special characters found when running the programm in -d flag\n");
+            exit(EXIT_FAILURE);
+        }
+
         line_buf[len - 1] = '\0';
         p = malloc(len);
         strcpy(p, line_buf);
