@@ -127,7 +127,7 @@ int _strcmp_case_insensitive(const char *str1, const char *str2) {
     int c1, c2, result;
 
     while ((c1 = *(str1++)) != '\0') {
-        c2 = *(str1++);
+        c2 = *(str2++);
         result = c1 - c2;
         if (result != 0) {
             return result;

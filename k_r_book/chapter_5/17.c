@@ -12,13 +12,14 @@ static int cmp_field = 0;
 
 void parse_flags(int argc, char *argv[], int index);
 void parse_field_flag(int argc, char *argv[], int index);
+int _has_special_char(char *s);
 int _getline(char *s, int lim);
 int _readlines(char *lineptr[], int nline);
 void _writelines(char *lineptr[], int nline);
 void _swap(void *v[], int i, int j);
 int _numcmp(const char *, const char *);
 int _strcmp_case_insensitive(const char *, const char *);
-int _has_special_char(char *s);
+int _fieldcmp(const char *, const char *, int (*cmp)(const void *, const void *));
 void _qsort(void *lineptr[], int left, int right,
         int (*comp)(const void *, const void *), int reverse);
 
@@ -192,11 +193,11 @@ int _numcmp(const char *s1, const char *s2) {
     }
 }
 
-int _strcmp_case_insensitive(const char *str1, const char *str2) {
+int _strcmp_case_insensitive(const char *s1, const char *s2) {
     int c1, c2, result;
 
-    while ((c1 = *(str1++)) != '\0') {
-        c2 = *(str1++);
+    while ((c1 = *(s1++)) != '\0') {
+        c2 = *(s2++);
         result = c1 - c2;
         if (result != 0) {
             return result;
@@ -204,6 +205,31 @@ int _strcmp_case_insensitive(const char *str1, const char *str2) {
     }
 
     return result;
+}
+
+int _fieldcmp(const char *s1, const char *s2, int (*cmp)(const void *, const void *)) {
+    char *local1 = strdup(s1);
+    char *local2 = strdup(s2);
+
+    char *t1, *t2;
+
+    char *temp = strtok(local1, " ");
+    if (temp != NULL) {
+        t1 = temp;
+        for (int i = 0; (temp = strtok(NULL, " ")) != NULL && i < cmp_field; i++) {
+            t1 = temp;
+        }        
+    }
+    
+    temp = strtok(local2, " ");
+    if (temp != NULL) {
+        t2 = temp;
+        for (int i = 0; (temp = strtok(NULL, " ")) != NULL && i < cmp_field; i++) {
+            t2 = temp;
+        }        
+    }
+
+    return cmp(t1, t2);
 }
 
 void _qsort(void *lineptr[], int left, int right,
@@ -217,12 +243,24 @@ void _qsort(void *lineptr[], int left, int right,
     last = left;
     for (i = left + 1; i <= right; i++) {
         if (reverse) {
-            if ((*comp)(lineptr[i], lineptr[left]) > 0) {
-                _swap(lineptr, ++last, i);
+            if (cmp_field > 0) {
+                if (_fieldcmp(lineptr[i], lineptr[left], comp) > 0) {
+                    _swap(lineptr, ++last, i);
+                }
+            } else {
+                if ((*comp)(lineptr[i], lineptr[left]) > 0) {
+                    _swap(lineptr, ++last, i);
+                }    
             }
         } else {
-            if ((*comp)(lineptr[i], lineptr[left]) < 0) {
-                _swap(lineptr, ++last, i);
+            if (cmp_field > 0) {
+                if (_fieldcmp(lineptr[i], lineptr[left], comp) < 0) {
+                    _swap(lineptr, ++last, i);
+                }
+            } else {
+                if ((*comp)(lineptr[i], lineptr[left]) < 0) {
+                    _swap(lineptr, ++last, i);
+                }    
             }
         }
     }
