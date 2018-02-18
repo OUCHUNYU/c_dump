@@ -25,20 +25,8 @@ int main(int argc, char *argv[]) {
     int nlines;
     char *lineptrs[MAXLINE];
 
-    if (argc > 1) {
-        parse_flags(argc, argv, 1);
-    }
-
-    if (argc > 2) {
-        parse_flags(argc, argv, 2);
-    }
-
-    if (argc > 3) {
-        parse_flags(argc, argv, 3);
-    }
-
-    if (argc > 4) {
-        parse_flags(argc, argv, 3);
+    for (int counter = 1; counter < argc; counter++) {
+        parse_flags(argc, argv, counter);
     }
 
     printf("numeric: %i, reverse: %i, case: %i, dir order: %i\n", numeric, reverse, case_insensitive, dir_order);

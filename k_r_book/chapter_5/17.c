@@ -7,14 +7,18 @@
 static int numeric = 0;
 static int reverse = 0;
 static int case_insensitive = 0;
+static int dir_order = 0;
+static int cmp_field = 0;
 
 void parse_flags(int argc, char *argv[], int index);
+void parse_field_flag(int argc, char *argv[], int index);
 int _getline(char *s, int lim);
 int _readlines(char *lineptr[], int nline);
 void _writelines(char *lineptr[], int nline);
 void _swap(void *v[], int i, int j);
 int _numcmp(const char *, const char *);
 int _strcmp_case_insensitive(const char *, const char *);
+int _has_special_char(char *s);
 void _qsort(void *lineptr[], int left, int right,
         int (*comp)(const void *, const void *), int reverse);
 
@@ -24,10 +28,11 @@ int main(int argc, char *argv[]) {
     char *lineptrs[MAXLINE];
 
     for (int counter = 1; counter < argc; counter++) {
-        parse_flags(argc, argv, counter);
+    	parse_flags(argc, argv, counter);
     }
 
-    printf("numeric: %i, reverse: %i, case: %i\n", numeric, reverse, case_insensitive);
+    printf("numeric: %i, reverse: %i, case: %i, dir order: %i, cmp_field: %i\n", 
+        numeric, reverse, case_insensitive, dir_order, cmp_field);
 
     if ((nlines = _readlines(lineptrs, MAXLINE)) >= 0) {
         int (*function_p)(const char *, const char *) = strcmp;
@@ -48,6 +53,13 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+void parse_field_flag(int argc, char *argv[], int index) {
+    int f = 0;
+    if (*argv[index] == '-' && *(argv[index] + 1) == 'D' && *(argv[index] + 2) == '=' && ((f = atoi(argv[index] + 3)) != 0)) {
+        cmp_field = f;
+    }
+}
+
 void parse_flags(int argc, char *argv[], int index) {
     char *arg = argv[index];
 
@@ -57,14 +69,25 @@ void parse_flags(int argc, char *argv[], int index) {
         reverse = 1;
     } else if (strcmp(arg, "-f") == 0) {
         case_insensitive = 1;        
+    } else if (strcmp(arg, "-d") == 0) {
+        dir_order = 1;
     } else if (strcmp(arg, "-rn") == 0 || strcmp(arg, "-nr") == 0) {
         reverse = 1;
         numeric = 1;
+    } else if (strcmp(arg, "-nf") == 0 || strcmp(arg, "-fn") == 0) {
+        numeric = 1;
+        case_insensitive = 1;
+    } else if (strcmp(arg, "-nd") == 0 || strcmp(arg, "-dn") == 0) {
+        numeric = 1;
+        dir_order = 1;
     } else if (strcmp(arg, "-rf") == 0 || strcmp(arg, "-fr") == 0) {
         reverse = 1;
         case_insensitive = 1;
-    } else if (strcmp(arg, "-nf") == 0 || strcmp(arg, "-fn") == 0) {
-        numeric = 1;
+    } else if (strcmp(arg, "-rd") == 0 || strcmp(arg, "-dr") == 0) {
+        reverse = 1;
+        dir_order = 1;
+    } else if (strcmp(arg, "-fd") == 0 || strcmp(arg, "-df") == 0) {
+        dir_order = 1;
         case_insensitive = 1;
     } else if (strcmp(arg, "-rnf") == 0 || strcmp(arg, "-rfn") == 0 
             || strcmp(arg, "-nrf") == 0 || strcmp(arg, "-nfr") == 0
@@ -72,7 +95,48 @@ void parse_flags(int argc, char *argv[], int index) {
         numeric = 1;
         reverse = 1;
         case_insensitive = 1;
+    } else if (strcmp(arg, "-rfd") == 0 || strcmp(arg, "-dfr") == 0 
+            || strcmp(arg, "-rdf") == 0 || strcmp(arg, "-fdr") == 0
+            || strcmp(arg, "-frd") == 0 || strcmp(arg, "-drf") == 0) {
+        dir_order = 1;
+        reverse = 1;
+        case_insensitive = 1;
+    } else if (strcmp(arg, "-nfd") == 0 || strcmp(arg, "-fdn") == 0 
+            || strcmp(arg, "-fnd") == 0 || strcmp(arg, "-dfn") == 0
+            || strcmp(arg, "-ndf") == 0 || strcmp(arg, "-dnf") == 0) {
+        dir_order = 1;
+        numeric = 1;
+        case_insensitive = 1;
+    } else if (
+            strcmp(arg, "-nrfd") == 0 || strcmp(arg, "-nrdf") == 0 
+            || strcmp(arg, "-nfdr") == 0 || strcmp(arg, "-nfrd") == 0
+            || strcmp(arg, "-ndrf") == 0 || strcmp(arg, "-ndfr") == 0
+            || strcmp(arg, "-rfdn") == 0 || strcmp(arg, "-rfnd") == 0
+            || strcmp(arg, "-rdnf") == 0 || strcmp(arg, "-rdfn") == 0
+            || strcmp(arg, "-fdnr") == 0 || strcmp(arg, "-fdrn") == 0
+            || strcmp(arg, "-fnrd") == 0 || strcmp(arg, "-fndr") == 0
+            || strcmp(arg, "-dnrf") == 0 || strcmp(arg, "-dnfr") == 0
+            ) {
+        dir_order = 1;
+        numeric = 1;
+        reverse = 1;
+        case_insensitive = 1;
     }
+
+    parse_field_flag(argc, argv, index);
+}
+
+int _has_special_char(char *s) {
+    char c;
+    int result = 0;
+    while ((c = *(s++)) != '\0') {
+        if ((c >= 97 && c <= 122) || (c >= 65 && c <= 90) || (c >= 48 && c <= 57) || c == '\n') {
+            continue;
+        }
+
+        result = 1;
+    }
+    return result;
 }
 
 int _getline(char *s, int lim) {
@@ -95,6 +159,11 @@ int _readlines(char *lineptr[], int nline) {
     char *p;
     char line_buf[10000];
     while ((len = _getline(line_buf, 10000)) > 0) {
+        if (dir_order && _has_special_char(line_buf)) {
+            printf("Special characters found when running the programm in -d flag\n");
+            exit(EXIT_FAILURE);
+        }
+
         line_buf[len - 1] = '\0';
         p = malloc(len);
         strcpy(p, line_buf);
