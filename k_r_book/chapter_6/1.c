@@ -13,6 +13,7 @@ void ungetch(int ch);
 int get_word(char *word_buff, int limit);
 int is_underscore(int ch);
 int handle_string_const(char *word_buff, int current_c, int *limit);
+int handle_comment(char *word_buff, int current_c, int *limit);
 
 int main(int argc, char *argv[]) {
 
@@ -61,12 +62,16 @@ int get_word(char *word_buff, int limit) {
 		word_buff++;
 	}
 
-	current_c = handle_string_const(word_buff, current_c, &limit);
+	if (handle_string_const(word_buff, current_c, &limit)) {
+		return current_c;
+	}
 
-	// TODO: handle comments like // or /* */
+	if (handle_comment(word_buff, current_c, &limit)) {
+		return current_c;
+	}
 
 	if (!isalpha(current_c) && !is_underscore(current_c)) {
-		*(word_buff += (limit_copy - limit)) = '\0';
+		*word_buff = '\0';
 		return current_c;
 	}
 
@@ -88,11 +93,9 @@ int is_underscore(int ch) {
 int handle_string_const(char *word_buff, int current_c, int *limit) {
 	// early exit if not a ", return the same char back so the checking can continue
 	if (current_c != '\"') {
-		return current_c;
+		return 0;
 	}
 
-	// *word_buff = current_c;
-	// word_buff++;
 	for (; --(*limit) > 0; word_buff++) {
 		*word_buff = getch();
 		if (*word_buff == '\"') {
@@ -105,9 +108,37 @@ int handle_string_const(char *word_buff, int current_c, int *limit) {
 		exit(EXIT_FAILURE);
 	}
 
-	int result = *word_buff;
-	word_buff++;
-	return result;
+	*(++word_buff) = '\0';
+	return 1;
+}
+
+int handle_comment(char *word_buff, int current_c, int *limit) {
+	if (current_c != '/') {
+		return 0;
+	}
+
+	int next_char = getch();
+	if (next_char != '/') {
+		ungetch(next_char);
+		return 0;
+	}
+
+	*(word_buff++) = next_char;
+
+	for (; --(*limit) > 0; word_buff++) {
+		*word_buff = getch();
+		if (*word_buff == '\n') {
+			break;
+		}
+	}
+
+	if (*word_buff != '\n') {
+		printf("Error: ungetch exceed the max size allowed but still no new line in comment\n");
+		exit(EXIT_FAILURE);
+	}
+
+	*word_buff = '\0';
+	return 1;
 }
 
 
