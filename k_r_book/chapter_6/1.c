@@ -50,7 +50,6 @@ void ungetch(int ch) {
 
 int get_word(char *word_buff, int limit) {
 	int current_c;
-	char *temp_word = word_buff;
 	int limit_copy = limit;
 
 	while (isspace(current_c = getch())) {
@@ -58,27 +57,27 @@ int get_word(char *word_buff, int limit) {
 	}
 
 	if (current_c != EOF) {
-		*temp_word = current_c;
-		temp_word++;
+		*word_buff = current_c;
+		word_buff++;
 	}
-	
-	current_c = handle_string_const(temp_word, current_c, &limit);
+
+	current_c = handle_string_const(word_buff, current_c, &limit);
 
 	// TODO: handle comments like // or /* */
 
 	if (!isalpha(current_c) && !is_underscore(current_c)) {
-		*(temp_word += (limit_copy - limit)) = '\0';
+		*(word_buff += (limit_copy - limit)) = '\0';
 		return current_c;
 	}
 
-	for (; --limit > 0; temp_word++) {
-		if (!isalnum(*temp_word = getch()) && !is_underscore(*temp_word)) {
-			ungetch(*temp_word);
+	for (; --limit > 0; word_buff++) {
+		if (!isalnum(*word_buff = getch()) && !is_underscore(*word_buff)) {
+			ungetch(*word_buff);
 			break;
 		}
 	}
 
-	*temp_word = '\0';
+	*word_buff = '\0';
 	return word_buff[0];
 }
 
