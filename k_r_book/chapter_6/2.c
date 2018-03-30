@@ -17,6 +17,41 @@ make a structure to hold the group
 #define MAX_GROUP_ALLOWED 1000
 #define MAX_GROUP_LIST_SIZE 1000
 
+char *c_keywords[] = {
+	"auto",
+	"double",
+	"int",
+	"struct",
+	"break",
+	"else",
+	"long",
+	"switch",
+	"case",
+	"enum",
+	"register",
+	"typedef",
+	"char",
+	"extern",
+	"return",
+	"union",
+	"const",
+	"float",
+	"short",
+	"unsigned",
+	"continue",
+	"for",
+	"signed",
+	"void",
+	"default",
+	"goto",
+	"sizeof",
+	"volatile",
+	"do",
+	"if",
+	"static",
+	"while"
+};
+
 struct group {
 	char *identical_chars;
 	int identical_char_count;
@@ -26,6 +61,7 @@ struct group {
 int parse_arg(char *argv[]);
 struct group *init_new_group(char *first_string, int count);
 int check_identical(char *str1, char *str2, int count);
+int is_variable(char *str);
 
 int main(int argc, char *argv[]) {
 
@@ -38,6 +74,8 @@ int main(int argc, char *argv[]) {
 	struct group *ordered_groups[MAX_GROUP_ALLOWED];
 
 	/* 
+		import 1.c getword
+
 		get a variable in each loop
 		go through the groups and check if it belongs to any group
 		if yes put it in that group
